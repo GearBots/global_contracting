@@ -1,26 +1,36 @@
+'use client'
+
+import React, { useState } from 'react';
+import ContactForm from './ContactForm';
+
 export default function Contact() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const services = [
+        { title: 'Phone Number', description: '121-121-1212' },
+        { title: 'Email', description: 'globalcontractingllc@yahoo.com' },
+    ];
+
     return (
-    <section className="bg-gray-900 text-white py-16">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-7xl mx-auto px-4 py-16">
-        <div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Contact Us</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-gray-700 p-6 rounded-lg">
-                    <h3 className="text-xl font-semibold mb-2">Email</h3>
-                    <h3 className="text-xl font-semibold mb-2">Phone</h3>
+        <section className="bg-gray-900 text-white py-16">
+            <div className="container mx-auto px-4">
+                <h2 className="text-3xl font-bold mb-8 text-center">Contact Us</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {services.map((service, index) => (
+                        <div key={index} className="bg-gray-700 p-6 rounded-lg">
+                            <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                            <p className="mb-4">{service.description}</p>
+                            <button 
+                                onClick={() => setIsModalOpen(true)} 
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Reach Out
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </div>
-        </div>
-        <div>
-            <div className='w-full max-w-[30rem] h-[35rem] overflow-hidden rounded-t-[15rem] border-8 border-solid border-gray-500 mx-auto'>
-                <img 
-                className='w-full h-full object-cover scale-110 transform hover:scale-125 transition-transform duration-300' 
-                src='xx-lager.svg' 
-                alt='Our Values' 
-                />
-            </div>
-        </div>
-    </div>
-    </section>
-  );
+            <ContactForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        </section>
+    );
 }
