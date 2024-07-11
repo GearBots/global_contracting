@@ -35,7 +35,6 @@ export default function ContactForm({ isOpen, onClose }) {
     })
     .catch((error) => {
       console.error('Error sending email:', error);
-      // You might want to show an error message to the user here
     })
     .finally(() => {
       setIsSending(false);
