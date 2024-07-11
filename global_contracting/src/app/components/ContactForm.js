@@ -1,19 +1,45 @@
 'use client'
 
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 export default function ContactForm({ isOpen, onClose }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Sending email:', { name, email, message });
-    setName('');
-    setEmail('');
-    setMessage('');
-    onClose();
+    setIsSending(true);
+
+    const templateEmail = {
+      from_name: name,
+      from_email: email,
+      to_name: 'Global Contracting LLC',
+      message: message,
+    }
+
+    emailjs.send(
+      process.env.NEXT_PUBLIC_SERVICE_ID,
+      process.env.NEXT_PUBLIC_TEMPLATE_ID,
+      templateEmail,
+      process.env.NEXT_PUBLIC_PUBLIC_KEY
+    )
+    .then((response) => {
+      console.log('Email sent successfully:', response);
+      setName('');
+      setEmail('');
+      setMessage('');
+      onClose();
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+      // You might want to show an error message to the user here
+    })
+    .finally(() => {
+      setIsSending(false);
+    });
   };
 
   if (!isOpen) return null;
@@ -58,7 +84,9 @@ export default function ContactForm({ isOpen, onClose }) {
           </div>
           <div className="flex justify-end">
             <button type="button" onClick={onClose} className="mr-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-100">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Send</button>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" disabled={isSending}>
+              {isSending ? 'Sending...' : 'Send'}
+            </button>
           </div>
         </form>
       </div>
